@@ -35,6 +35,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        //imageViewVC.dismissViewControllerAnimated(true, completion: nil)
+        let VC = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle()).instantiateViewControllerWithIdentifier("containerVC")
+        self.window?.rootViewController = VC
+
     }
 
     func applicationWillTerminate(application: UIApplication) {
