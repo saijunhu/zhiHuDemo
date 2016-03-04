@@ -13,7 +13,7 @@ import SDCycleScrollView
 import SDWebImage
 import MJRefresh
 
-class mainTableViewController: UITableViewController ,SDCycleScrollViewDelegate,UIPopoverPresentationControllerDelegate,UIAdaptivePresentationControllerDelegate{
+class mainTableViewController: UITableViewController ,SDCycleScrollViewDelegate{
 
     @IBOutlet weak var menuButton: UIBarButtonItem!
     
@@ -75,6 +75,7 @@ class mainTableViewController: UITableViewController ,SDCycleScrollViewDelegate,
             menuButton.action = "revealToggle:"
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
+        //self.navigationController?.hidesBarsOnSwipe = true
         
         //MJRefresh pull to refresh
         self.tableView.mj_header = MJRefreshNormalHeader(refreshingBlock: { () -> Void in
@@ -140,9 +141,7 @@ class mainTableViewController: UITableViewController ,SDCycleScrollViewDelegate,
 //        pController.delegate = self
         
     }
-    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
-        return UIModalPresentationStyle.None
-    }
+   
 
     //SDCycleViewDelegate
     func cycleScrollView(cycleScrollView: SDCycleScrollView!, didSelectItemAtIndex index: Int){
@@ -152,10 +151,17 @@ class mainTableViewController: UITableViewController ,SDCycleScrollViewDelegate,
             NSLog("performing...")
         }
         self.detailID = self.top_stories[index].id
+    
         NSLog("detailID\(detailID)")
+        mainToDetailVC.id = self.detailID
+        for i in self.top_stories{
+           mainToDetailVC.IDS.append(i.id)
+        }
+        //mainToDetailVC.IDS = self.forDetailIDS
         
         detailSegue.perform()
-        prepareForSegue(detailSegue, sender: nil)
+        //prepareForSegue(detailSegue, sender: nil)
+        
     }
 
   

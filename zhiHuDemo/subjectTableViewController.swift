@@ -23,12 +23,12 @@ class subjectTableViewController: UITableViewController {
     let width = UIScreen.mainScreen().bounds.width
     let height  = UIScreen.mainScreen().bounds.height
     
+    var addBtn = UIBarButtonItem()
+    var deleteBtn = UIBarButtonItem()
     override func viewDidLoad() {
         super.viewDidLoad()
         networkRequest()
-        let storyboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-        //        storyboard.view
-        
+
         //configure menubutton
         menuButton.title = "Menu"
         self.navigationItem.leftBarButtonItem =  menuButton
@@ -61,14 +61,22 @@ class subjectTableViewController: UITableViewController {
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
-        
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "addBtnClicked")
+        deleteBtn = UIBarButtonItem(barButtonSystemItem: .Undo, target: self, action: "deleteBtnClicked")
+        addBtn = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "addBtnClicked")
+        self.navigationItem.rightBarButtonItem = addBtn
+        self.navigationItem.rightBarButtonItem = deleteBtn
     }
     
+    
+    // MARK : -- btn cliked func
     func addBtnClicked(){
-        
+        self.navigationItem.rightBarButtonItem = self.deleteBtn
     }
     
+    func deleteBtnClicked(){
+        self.navigationItem.rightBarButtonItem = self.addBtn
+
+    }
     // MARK: - Table view data source
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {

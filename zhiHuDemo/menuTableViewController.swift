@@ -37,7 +37,7 @@ class menuTableViewController: UITableViewController {
         favoriteBtn.setTitle("我的收藏", forState: .Normal)
         favoriteBtn.addTarget(self, action: "favoriteBtnClicked", forControlEvents: .TouchUpInside)
         
-        let downloadBtn = UIButton(frame: CGRectMake(menuWidth*0.5,60,width*0.5,40))
+        let downloadBtn = UIButton(frame: CGRectMake(menuWidth*0.5,60,menuWidth*0.5,40))
         downloadBtn.setTitle("离线下载", forState: .Normal)
         //downloadBtn.backgroundColor = UIColor.grayColor()
         downloadBtn.addTarget(self, action: "downloadBtnClicked", forControlEvents: .TouchUpInside)
@@ -54,6 +54,7 @@ class menuTableViewController: UITableViewController {
         headerView.addSubview(downloadBtn)
         headerView.addSubview(homeBtn)
         
+        tableView.frame = CGRectMake(0, 0, menuWidth, height)
         tableView.tableHeaderView = headerView
         tableView.backgroundColor = UIColor.grayColor()
         // Uncomment the following line to preserve selection between presentations
@@ -135,7 +136,7 @@ class menuTableViewController: UITableViewController {
 
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
+        tableView.frame = CGRectMake(0, 0, menuWidth, height)
         let cell = tableView.dequeueReusableCellWithIdentifier("menuCell", forIndexPath: indexPath)
         
         let row = indexPath.row

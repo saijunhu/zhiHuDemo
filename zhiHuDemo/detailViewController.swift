@@ -10,7 +10,7 @@ import UIKit
 import Alamofire
 import SwiftyJSON
 
-class detailViewController: UIViewController ,UIWebViewDelegate{
+class detailViewController: UIViewController ,UIWebViewDelegate,UIScrollViewDelegate{
     
     var detailTitle = ""
     //UI size
@@ -23,6 +23,7 @@ class detailViewController: UIViewController ,UIWebViewDelegate{
             
             if self.id != 0{
                 url = NSURL(string: "http://news-at.zhihu.com/api/4/news/\(id)")!
+                extraURL = NSURL(string: "http://news-at.zhihu.com/api/4/story-extra/\(id)")!
                 networkRequest()
             }
         }
@@ -31,19 +32,22 @@ class detailViewController: UIViewController ,UIWebViewDelegate{
     var IDS = [Int]()
     var webView = UIWebView()
     var url = NSURL()
+    var extraURL = NSURL()
     var imageView = UIImageView()
     var titleLabel = UILabel()
  
-
+    var commentBtn = UIBarButtonItem()
+    var praiseBtn = UIBarButtonItem()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let socialBtn = UIBarButtonItem(title: "social", style: .Plain, target: self, action: "socialBtnClicked")
         let starBtn = UIBarButtonItem(title: "star", style: .Plain, target: self, action: "starBtnClicked")
-        let commentBtn = UIBarButtonItem(title: "comment", style: .Plain, target: self, action: "commentBtnClicked")
-        let praiseBtn = UIBarButtonItem(title: "praise", style: .Plain, target: self, action: "praiseBtnClicked")
+        commentBtn = UIBarButtonItem(title: "comment", style: .Plain, target: self, action: "commentBtnClicked")
+        praiseBtn = UIBarButtonItem(title: "praise", style: .Plain, target: self, action: "praiseBtnClicked")
         
-        let NavBtn = [socialBtn,starBtn,commentBtn,praiseBtn]
+        let NavBtn = [praiseBtn,commentBtn,starBtn,socialBtn]
         
         self.navigationItem.rightBarButtonItems = NavBtn
  
@@ -105,6 +109,14 @@ class detailViewController: UIViewController ,UIWebViewDelegate{
         return true
     }
     
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        if scrollView.contentOffset.y < -200{
+            self.navigationController?.navigationBarHidden = true
+        }
+        if scrollView.contentOffset.y > -200 {
+            self.navigationController?.navigationBarHidden = false
+        }
+    }
 
    //MARK: -selector func
     
@@ -138,6 +150,7 @@ class detailViewController: UIViewController ,UIWebViewDelegate{
     }
     
     func commentBtnClicked(){
+        //
         
     }
     
@@ -156,7 +169,8 @@ class detailViewController: UIViewController ,UIWebViewDelegate{
     }
     */
     func networkRequest(){
-       
+        
+       //get the news info
         Alamofire.request(.GET, url).validate().responseJSON { response in
             switch response.result {
             case .Success:
@@ -198,6 +212,37 @@ class detailViewController: UIViewController ,UIWebViewDelegate{
                 print(error)
             }
         }
+        
+        //get the extra info
+       
+        Alamofire.request(.GET, self.extraURL).validate().responseJSON { response in
+            switch response.result {
+            case .Success:
+                if let value = response.result.value {
+                    let json = JSON(value)
+                    print("JSON: \(json)")
+//                {"post_reasons":0,"long_comments":0,"popularity":104,"normal_comments":13,"comments":13,"short_comments":13}
+                    if let longComment = json["long_comments"].int{
+                        //self.
+                    }
+                    if let shortComment = json["short_comments"].int{
+                        
+                    }
+                    if let comments = json["comments"].int{
+                        self.commentBtn.title = "C \(comments)"
+                    }
+                    if let praise = json["popularity"].int{
+                        
+                       self.praiseBtn.title = "P \(praise)"
+                    }
+                }
+            case .Failure(let error):
+                print(error)
+            }
+        }
+        
+        
+        
     }
     
     
