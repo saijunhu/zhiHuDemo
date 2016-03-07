@@ -22,6 +22,9 @@ class menuTableViewController: UITableViewController {
     var subjectsID = [Int]()
     var subjectDetailID = 0
     
+    //data persistence
+    var mainInfo = [story]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         networkRequest()
@@ -58,11 +61,14 @@ class menuTableViewController: UITableViewController {
         tableView.tableHeaderView = headerView
         tableView.backgroundColor = UIColor.grayColor()
         // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
+         self.clearsSelectionOnViewWillAppear = false
 
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-        
+        //use the FMDB
+//        let documents = try! NSFileManager.defaultManager().URLForDirectory(.DocumentDirectory, inDomain: .UserDomainMask, appropriateForURL: nil, create: false)
+//        let fileURL = documents.URLByAppendingPathComponent("test.sqlite")
+//        let documents = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first
+//        let dataBaseURL = documents?.URLByAppendingPathComponent("stories.sqlite", isDirectory: false)
+//        let db = FMDatabase(path: dataBaseURL?.path)
     }
 
     func homeBtnClicked(){
@@ -78,7 +84,17 @@ class menuTableViewController: UITableViewController {
     }
     func downloadBtnClicked(){
         
-    }
+        //let home = NSHomeDirectory()
+//        let directories = NSSearchPathForDirectoriesInDomains(.DownloadsDirectory, .UserDomainMask, true)
+//        if let download = directories.first{
+//            if let urlDownload = NSURL(string: download){
+//                let urlStoriesContent = urlDownload.URLByAppendingPathComponent("stories.plist")
+//                let urltopStoriesContent = urlDownload.URLByAppendingPathComponent("top_stories.plist")
+//                
+//                
+//            }
+//        }
+    }//end
     
     func favoriteBtnClicked(){
         

@@ -43,8 +43,9 @@ class mainTableViewController: UITableViewController ,SDCycleScrollViewDelegate{
         super.viewDidLoad()
 //        cellsSum.append(0)
         //data handle
+        launchImageSet()
         url = NSURL(string: "http://news-at.zhihu.com/api/4/news/latest")!
-        self.networkRequest(url)
+        
         
         //navigation bar configure
         let loginBtn = UIBarButtonItem(title: "Login", style: .Plain, target: self, action: "loginBtnClicked")
@@ -66,9 +67,11 @@ class mainTableViewController: UITableViewController ,SDCycleScrollViewDelegate{
         tableView.backgroundColor = UIColor.grayColor()
         tableView.tableHeaderView = cycleScrollView
         tableView.rowHeight = 88
+        tableView.estimatedRowHeight = UITableViewAutomaticDimension
         tableView.separatorStyle = .None
         tableView.separatorInset = UIEdgeInsetsMake(0, 3, 0, 3)
         tableView.indicatorStyle = UIScrollViewIndicatorStyle.White
+        self.clearsSelectionOnViewWillAppear = false
         //SWRevealViewcontrolller adjust
         if self.revealViewController() != nil {
             menuButton.target = self.revealViewController()
@@ -91,7 +94,7 @@ class mainTableViewController: UITableViewController ,SDCycleScrollViewDelegate{
             self.forDetailIDS = []
             
             self.top_stories = [top_story]()
-            self.networkRequest(self.url)
+            self.dataFetch(self.url)
 
             
         })
@@ -111,15 +114,83 @@ class mainTableViewController: UITableViewController ,SDCycleScrollViewDelegate{
                 let targetString = dateFormatter.stringFromDate(tmpdate!)
                 let yesterURL = NSURL(string: "http://news.at.zhihu.com/api/4/news/before/\(targetString)")!
                 
-                self.networkRequest(yesterURL)
+                self.dataFetch(yesterURL)
             }
         })
         
-        
-        
+        self.dataFetch(url)
+    
     }//viewDidLaod  ending
     
-   
+    //launch image set
+    func launchImageSet(){
+        let url = NSURL(string: "http://news-at.zhihu.com/api/4/start-image/1080*1776")
+        
+        netRequest(url!){ (json) -> Void in
+        if let imageURL = json["img"].string{
+            
+            let imageData = NSData(contentsOfURL: NSURL(string: imageURL)!)
+            let mainWindow = UIApplication.sharedApplication().keyWindow
+            let imageView = UIImageView(frame: CGRectMake(0, 0, self.width, self.height))
+            imageView.image = UIImage(data: imageData!)
+            imageView.contentMode = .ScaleAspectFill
+            mainWindow?.addSubview(imageView)
+            
+            let label = UILabel(frame: CGRectMake(0,self.height - 50,self.width,20))
+            label.contentMode = .Right
+            label.text = json["text"].stringValue
+            label.textColor = UIColor.lightGrayColor()
+            label.backgroundColor = UIColor.clearColor()
+            label.textAlignment = .Right
+            mainWindow?.addSubview(label)
+            
+            //animation start
+            UIView.animateWithDuration(3, animations: {
+                let rect = CGRectMake(-100, -100, self.width+200, self.height+200)
+                imageView.frame = rect
+                }, completion: { (completion) -> Void in
+                    if completion {
+                        UIView.animateWithDuration(1, animations: {
+                            imageView.alpha = 0
+                            label.alpha = 0
+                            }, completion: { (complete) -> Void in
+                                if complete{
+                                    imageView.removeFromSuperview()
+                                    label.removeFromSuperview()
+                                }
+                        })
+                    }
+            })//animation end
+        }
+        
+        }
+        
+        //animation
+//        UIView.animateWithDuration(3,animations:{
+//            let height = UIScreen.mainScreen().bounds.size.height
+//            let rect = CGRectMake(-100,-100,width+200,height+200)
+//            img.frame = rect
+//            },completion:{
+//                (Bool completion) in
+//                
+//                if completion {
+//                    UIView.animateWithDuration(1,animations:{
+//                        img.alpha = 0
+//                        lbl.alpha = 0
+//                        },completion:{
+//                            (Bool completion) in
+//                            
+//                            if completion {
+//                                img.removeFromSuperview()
+//                                lbl.removeFromSuperview()
+//                            }
+//                    })
+//                }
+//        })
+        
+    }
+    
+
     //MARK:-- BarBtn func
     
     func loginBtnClicked(){
@@ -242,129 +313,99 @@ class mainTableViewController: UITableViewController ,SDCycleScrollViewDelegate{
         NSLog("detailID\(detailID)")
         detailSegue.perform()
         //prepareForSegue(detailSegue, sender: nil)
-//      self.navigationController?.navigationBar.pushNavigationItem(<#T##item: UINavigationItem##UINavigationItem#>, animated: <#T##Bool#>)
+
     }
 
-//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//
-//        if segue.identifier == "mainToDetail"{
-//            let VC = segue.destinationViewController as! detailViewController
-//            VC.id = self.detailID
-//            VC.IDS = self.
-//        }
-//
-//    }
-    
-    func networkRequest(url: NSURL){
-      
-        Alamofire.request(.GET, url).validate().responseJSON { response in
-            switch response.result{
-            // when success
-            case .Success:
-               
-                if let value = response.result.value {
-                    let json = JSON(value)
-                    NSLog("JSON: \(json)")
-                    
-                    //date
-                    if let tmpDate = json["date"].string{
-                        self.allDates.append(tmpDate)
-                    }
-                    //stories
-                    let storiesJsonArray = json["stories"]
-                    var tmpTitleArr = [String]()
-                    var tmpImagesArr = [String]()
-                    var tmpIDArr = [Int]()
-                    for index in 0...storiesJsonArray.count-1{
-                        
-                       
-                        //handle title
-                        if let tmpTitle = json["stories", index,"title"].string{
-                            tmpTitleArr.append(tmpTitle)
-                        }else{
-                            tmpTitleArr.append("NO Title")
-                        }
-                        
-                        //handle imagesURL
-                        if let tmpImageString = json["stories",index,"images",0].string {
-                            tmpImagesArr.append(tmpImageString)
-                        }else{
-                            tmpImagesArr.append("NO Image")
-                        }
-                        
-                        //handel id
-                        if let tmpID = json["stories",index,"id"].int{
-                            tmpIDArr.append(tmpID)
-                            self.forDetailIDS.append(tmpID)
-                        }else{
-                            tmpIDArr.append(0)
-                            self.forDetailIDS.append(0)
-                        }
-                    }
-                    self.allStoriesTitles.append(tmpTitleArr)
-                    self.allStoriesImages.append(tmpImagesArr)
-                    self.allStoriesID.append(tmpIDArr)
 
-                    //top_stories, notice past data no this
-                    let top_storiesJsonArray = json["top_stories"]
-                    if top_storiesJsonArray.count != 0 {
-                        for index in 0...top_storiesJsonArray.count-1{
-                            var top_Story = top_story()
-                            top_Story.title = json["top_stories", index,"title"].stringValue
-                            top_Story.images = json["top_stories",index,"image"].stringValue
-                            top_Story.id = json["top_stories",index,"id"].int!
-                            self.top_stories.append(top_Story)
-                            let tmpString:String = top_Story.images
-                            self.cycleImagesURLString.append(tmpString)
-                            
-                            let tmpTitles:String = top_Story.title
-                            self.cycleImagesTitles.append(tmpTitles)
-                            //NSLog("sthe count is \(self.top_stories.count)")
-                        }
+    func dataFetch(urlString:NSURL){
+        
+        netRequest(urlString) { (json) -> Void in
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                //date
+               
+                if let tmpDate = json["date"].string{
+                    self.allDates.append(tmpDate)
+                }
+                //stories
+                let storiesJsonArray = json["stories"]
+                var tmpTitleArr = [String]()
+                var tmpImagesArr = [String]()
+                var tmpIDArr = [Int]()
+                for index in 0...storiesJsonArray.count-1{
+                    
+                    
+                    //handle title
+                    if let tmpTitle = json["stories", index,"title"].string{
+                        tmpTitleArr.append(tmpTitle)
+                    }else{
+                        tmpTitleArr.append("NO Title")
                     }
-                   
+                    
+                    //handle imagesURL
+                    if let tmpImageString = json["stories",index,"images",0].string {
+                        tmpImagesArr.append(tmpImageString)
+                    }else{
+                        tmpImagesArr.append("NO Image")
+                    }
+                    
+                    //handel id
+                    if let tmpID = json["stories",index,"id"].int{
+                        tmpIDArr.append(tmpID)
+                        self.forDetailIDS.append(tmpID)
+                    }else{
+                        tmpIDArr.append(0)
+                        self.forDetailIDS.append(0)
+                    }
+                }
+                self.allStoriesTitles.append(tmpTitleArr)
+                self.allStoriesImages.append(tmpImagesArr)
+                self.allStoriesID.append(tmpIDArr)
+                
+                //top_stories, notice past data no this
+                let top_storiesJsonArray = json["top_stories"]
+                if top_storiesJsonArray.count != 0 {
+                    for index in 0...top_storiesJsonArray.count-1{
+                        var top_Story = top_story()
+                        top_Story.title = json["top_stories", index,"title"].stringValue
+                        top_Story.images = json["top_stories",index,"image"].stringValue
+                        top_Story.id = json["top_stories",index,"id"].int!
+                        self.top_stories.append(top_Story)
+                        let tmpString:String = top_Story.images
+                        self.cycleImagesURLString.append(tmpString)
+                        
+                        let tmpTitles:String = top_Story.title
+                        self.cycleImagesTitles.append(tmpTitles)
+                        //NSLog("sthe count is \(self.top_stories.count)")
+                    }
                 }
                 
-            self.tableView.mj_header.endRefreshing()
-            self.tableView.mj_footer.endRefreshing()
-           
-            
-            //set the cycleView
-            self.cycleScrollView.imageURLStringsGroup = self.cycleImagesURLString as [AnyObject]
-            self.cycleScrollView.titlesGroup = self.cycleImagesTitles as [AnyObject]
-                
-            self.tableView.reloadData()
-
-          
-            //when failure
-            case .Failure(let error):
                 self.tableView.mj_header.endRefreshing()
-                print(error)
+                self.tableView.mj_footer.endRefreshing()
                 
-                //load errorView
-                let errorView = UIView(frame: CGRectMake(0,0,self.width,self.height))
-                let tintLabel = UILabel()
-                tintLabel.center = CGPoint(x: self.width*0.5,y: self.height*0.5)
-                tintLabel.sizeThatFits(CGSize(width: 50, height: 100))
-                tintLabel.text = " you netWork may have some mistakes,please check"
-                tintLabel.numberOfLines = 2
-                errorView.addSubview(tintLabel)
-                self.view.addSubview(errorView)
-                self.view.bringSubviewToFront(errorView)
+                //set the cycleView
+                self.cycleScrollView.imageURLStringsGroup = self.cycleImagesURLString as [AnyObject]
+                self.cycleScrollView.titlesGroup = self.cycleImagesTitles as [AnyObject]
                 
-            }
-         }
-        
-        
+                self.tableView.reloadData()
+            })
+
+        }
     }
     
-   
-
+    
+    
+    
+    
+    
 }
 
 
 
-    
+
+
+
+
+
 
 
 

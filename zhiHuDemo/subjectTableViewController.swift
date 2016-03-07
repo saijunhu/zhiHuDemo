@@ -56,6 +56,7 @@ class subjectTableViewController: UITableViewController {
         tableView.separatorStyle = .SingleLineEtched
         tableView.separatorStyle = .None
         tableView.backgroundColor = UIColor.grayColor()
+        self.clearsSelectionOnViewWillAppear = false
         //        tableView.separatorInset = UIEdgeInsets(top: 30, left: 30, bottom: 30, right: 10)
         //tableView.separatorColor = UIColor.blueColor()
         

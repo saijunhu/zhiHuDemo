@@ -9,9 +9,9 @@
 /* Begin PBXBuildFile section */
 		15661AFFC524FD8D3D2BC5B6 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CECD3BB41901CA70F9E3865A /* Pods.framework */; };
 		760BCF541C87D1000072DD5F /* launchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 760BCF521C87D1000072DD5F /* launchViewController.swift */; };
-		760BCF551C87D1000072DD5F /* launchViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 760BCF531C87D1000072DD5F /* launchViewController.xib */; };
 		760BCF571C87E4180072DD5F /* ZhihuDailyPurify.png in Resources */ = {isa = PBXBuildFile; fileRef = 760BCF561C87E4180072DD5F /* ZhihuDailyPurify.png */; };
-		7641A4111C7D584E00D41CAE /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7641A4101C7D584E00D41CAE /* Launch Screen.storyboard */; };
+		76ECC2A41C8D46F8006C96CC /* UIViewExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76ECC2A31C8D46F8006C96CC /* UIViewExt.swift */; };
+		76ECC2A81C8D4FB1006C96CC /* UIImageViewExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76ECC2A71C8D4FB1006C96CC /* UIImageViewExt.swift */; };
 		76EED9701C7C9AB60075B604 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76EED96F1C7C9AB60075B604 /* SWRevealViewController.m */; };
 		76F04CFD1C7C54D1005784B0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76F04CFC1C7C54D1005784B0 /* AppDelegate.swift */; };
 		76F04CFF1C7C54D1005784B0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76F04CFE1C7C54D1005784B0 /* ViewController.swift */; };
@@ -29,9 +29,9 @@
 /* Begin PBXFileReference section */
 		62E87C5FC1384E5017C743EB /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		760BCF521C87D1000072DD5F /* launchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = launchViewController.swift; sourceTree = "<group>"; };
-		760BCF531C87D1000072DD5F /* launchViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = launchViewController.xib; sourceTree = "<group>"; };
 		760BCF561C87E4180072DD5F /* ZhihuDailyPurify.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ZhihuDailyPurify.png; sourceTree = "<group>"; };
-		7641A4101C7D584E00D41CAE /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		76ECC2A31C8D46F8006C96CC /* UIViewExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewExt.swift; sourceTree = "<group>"; };
+		76ECC2A71C8D4FB1006C96CC /* UIImageViewExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageViewExt.swift; sourceTree = "<group>"; };
 		76EED96D1C7C9AB60075B604 /* zhiHuDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "zhiHuDemo-Bridging-Header.h"; sourceTree = "<group>"; };
 		76EED96E1C7C9AB60075B604 /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
 		76EED96F1C7C9AB60075B604 /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
@@ -81,10 +81,18 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		76ECC2A21C8D46AF006C96CC /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				76ECC2A31C8D46F8006C96CC /* UIViewExt.swift */,
+				76ECC2A71C8D4FB1006C96CC /* UIImageViewExt.swift */,
+			);
+			name = Utility;
+			sourceTree = "<group>";
+		};
 		76EED9711C7C9ABF0075B604 /* SWRevealViewController */ = {
 			isa = PBXGroup;
 			children = (
-				76EED96D1C7C9AB60075B604 /* zhiHuDemo-Bridging-Header.h */,
 				76EED96E1C7C9AB60075B604 /* SWRevealViewController.h */,
 				76EED96F1C7C9AB60075B604 /* SWRevealViewController.m */,
 			);
@@ -115,6 +123,7 @@
 				76F48C821C7D2A94000C798B /* C */,
 				76F48C811C7D2A87000C798B /* V */,
 				76F48C801C7D2A78000C798B /* M */,
+				76ECC2A21C8D46AF006C96CC /* Utility */,
 				76F48C831C7D2B03000C798B /* others */,
 			);
 			path = zhiHuDemo;
@@ -132,10 +141,8 @@
 			isa = PBXGroup;
 			children = (
 				76FF7EEB1C7DDB76001AF6AF /* Main.storyboard */,
-				7641A4101C7D584E00D41CAE /* Launch Screen.storyboard */,
 				76F3633C1C855988006F548E /* myTableViewCell.swift */,
 				76F3633D1C855989006F548E /* myTableViewCell.xib */,
-				760BCF531C87D1000072DD5F /* launchViewController.xib */,
 			);
 			name = V;
 			sourceTree = "<group>";
@@ -157,6 +164,7 @@
 		76F48C831C7D2B03000C798B /* others */ = {
 			isa = PBXGroup;
 			children = (
+				76EED96D1C7C9AB60075B604 /* zhiHuDemo-Bridging-Header.h */,
 				76F04CFC1C7C54D1005784B0 /* AppDelegate.swift */,
 				76F04D031C7C54D1005784B0 /* Assets.xcassets */,
 				760BCF561C87E4180072DD5F /* ZhihuDailyPurify.png */,
@@ -226,11 +234,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				760BCF551C87D1000072DD5F /* launchViewController.xib in Resources */,
 				76FF7EEC1C7DDB76001AF6AF /* Main.storyboard in Resources */,
 				76F3633F1C855989006F548E /* myTableViewCell.xib in Resources */,
 				76F04D041C7C54D1005784B0 /* Assets.xcassets in Resources */,
-				7641A4111C7D584E00D41CAE /* Launch Screen.storyboard in Resources */,
 				760BCF571C87E4180072DD5F /* ZhihuDailyPurify.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -294,7 +300,9 @@
 				76F48C7F1C7D27D1000C798B /* mainTableViewController.swift in Sources */,
 				76F3633E1C855989006F548E /* myTableViewCell.swift in Sources */,
 				76F3EA751C7F47C200BEB38F /* detailViewController.swift in Sources */,
+				76ECC2A81C8D4FB1006C96CC /* UIImageViewExt.swift in Sources */,
 				76F48C7D1C7D2700000C798B /* menuTableViewController.swift in Sources */,
+				76ECC2A41C8D46F8006C96CC /* UIViewExt.swift in Sources */,
 				76F04CFF1C7C54D1005784B0 /* ViewController.swift in Sources */,
 				76F3EA731C7F2C1C00BEB38F /* subjectTableViewController.swift in Sources */,
 				760BCF541C87D1000072DD5F /* launchViewController.swift in Sources */,
